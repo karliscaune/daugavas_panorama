@@ -1,0 +1,1 @@
+# daugavas_panorama
