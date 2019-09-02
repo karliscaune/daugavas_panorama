@@ -80,16 +80,12 @@ function setPickPosition(event) {
 }
  
 function clearPickPosition() {
-  // unlike the mouse which always has a position
-  // if the user stops touching the screen we want
-  // to stop picking. For now we just pick a value
-  // unlikely to pick something
   pickPosition.x = -100000;
   pickPosition.y = -100000;
 }
  
-window.addEventListener('mousedown', setPickPosition);
-window.addEventListener('mouseup', clearPickPosition);
+window.addEventListener('click', setPickPosition);
+// window.addEventListener('mouseup', clearPickPosition);
 // window.addEventListener('mouseleave', clearPickPosition);
 
 window.addEventListener('touchstart', (event) => {
@@ -136,20 +132,6 @@ var camera, controls, scene, renderer;
 				var geometry = new THREE.BoxBufferGeometry( 1, 1, 1 );
 				geometry.translate( 0, 0.5, 0 );
 				var material = new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } );
-				// for ( var i = 0; i < 100; i ++ ) {
-				// 	var mesh = new THREE.Mesh( geometry, material );
-				// 	mesh.position.x = Math.random() * 1600 - 800;
-				// 	mesh.position.y = 0;
-				// 	mesh.position.z = Math.random() * 1600 - 800;
-				// 	mesh.scale.x = 20;
-				// 	mesh.scale.y = Math.random() * 80 + 10;
-				// 	mesh.scale.z = 20;
-				// 	mesh.updateMatrix();
-				// 	mesh.matrixAutoUpdate = false;
-				// 	scene.add( mesh );
-                // }
-                
-                // generate objects with x / z coordinates and IDs
 
                 for(i = 0; i < markers.length; i++) {
                     var mesh = new THREE.Mesh(geometry, material);
