@@ -1,0 +1,70 @@
+/* styles.css */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+button:focus {outline:0;}
+
+.popup {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: black;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s linear;
+}
+
+.popup.visible {
+    opacity: 1;
+    pointer-events: all;
+}
+
+#panorama {
+    width: 100vw;
+    height: 100vh;
+}
+
+.close-button {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    border: 0;
+    background: white;
+    border-radius: 5px;
+    color: black;
+    font-size: 18px;
+    padding: 5px 10px;
+    font-weight: bold;
+    line-height: 30px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.close-button:hover {
+    background-color: #f5faff;
+}
+
+.close-button:active {
+    background-color: #e3effa;
+    outline: none;
+}
+
+.close-button svg {
+    width: 25px;
+    height: 25px;
+    margin-left: 10px;
+}
+
+.pnlm-render-container {
+    height: 100%;
+}

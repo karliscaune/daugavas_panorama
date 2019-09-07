@@ -3,6 +3,7 @@
     "version": "0.92.12",
     "description": "Interactive exhibition for panoramas of Daugava",
     "dependencies": {
+        "pannellum": "^2.5.3",
         "three": "^0.108.0"
     }
 }
