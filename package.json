@@ -1,9 +1,20 @@
 {
-    "name": "daugavas_panoram",
+    "name": "daugavas_panorama",
     "version": "0.92.12",
     "description": "Interactive exhibition for panoramas of Daugava",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/karliscaune/daugavas_panorama.git"
+    },
     "dependencies": {
         "pannellum": "^2.5.3",
         "three": "^0.108.0"
+    },
+    "devDependencies": {
+        "@babel/cli": "^7.6.0",
+        "@babel/core": "^7.6.0",
+        "@babel/preset-env": "^7.6.0",
+        "babelify": "^10.0.0",
+        "uglify-js": "^3.6.0"
     }
 }

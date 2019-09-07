@@ -6,14 +6,15 @@ var panellum = require('pannellum');
 
 // initialize stuff
 const canvas = document.getElementById('navCanvas');
+let panoramaViewer = null;
 
 // marker positions
 
 const markers = [
-    { x: 100, z: 100, id: 'p1', imageUrl: 'dist/demo4', vaov: 180, vOffset: 0, maxpitch: 40, minpitch: -90, htmlContent: '' },
-    { x: 100, z: 200, id: 'p2', imageUrl: 'dist/demo4', vaov: 180, vOffset: 0, maxpitch: 40, minpitch: -90, htmlContent: '' },
-    { x: 200, z: 100, id: 'p3', imageUrl: 'dist/demo4', vaov: 180, vOffset: 0, maxpitch: 40, minpitch: -90, htmlContent: '' },
-    { x: 200, z: 200, id: 'p4', imageUrl: 'dist/demo4', vaov: 180, vOffset: 0, maxpitch: 40, minpitch: -90, htmlContent: '' },
+    { x: 100, z: 100, id: 'p1', imageUrl: 'assets/demo4', vaov: 180, vOffset: 0, maxpitch: 40, minpitch: -90, htmlContent: '' },
+    { x: 100, z: 200, id: 'p2', imageUrl: 'assets/demo4', vaov: 180, vOffset: 0, maxpitch: 40, minpitch: -90, htmlContent: '' },
+    { x: 200, z: 100, id: 'p3', imageUrl: 'assets/demo4', vaov: 180, vOffset: 0, maxpitch: 40, minpitch: -90, htmlContent: '' },
+    { x: 200, z: 200, id: 'p4', imageUrl: 'assets/demo4', vaov: 180, vOffset: 0, maxpitch: 40, minpitch: -90, htmlContent: '' },
 ];
 
 
@@ -191,7 +192,7 @@ function init() {
     plane.rotation.x = Math.PI / 2;
     scene.add( plane );
 
-    for(i = 0; i < markers.length; i++) {
+    for(let i = 0; i < markers.length; i++) {
         var mesh = new THREE.Mesh(geometry, material);
         mesh.position.x = markers[i].x;
         mesh.position.y = 0;
