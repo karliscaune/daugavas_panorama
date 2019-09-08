@@ -2,6 +2,7 @@ var THREE = require('three');
 var markerOptions = require('./js/markers');
 var OrbitControls = require('./js/orbitcontrols');
 var panellum = require('pannellum');
+// var gpuPicker = require('./js/gpupicker');
 // var MapControls = require('./js/mapControls');
 
 // initialize stuff
@@ -83,7 +84,7 @@ class PickHelper {
       this.pickedObject = null;
       this.pickedObjectSavedColor = 0;
     }
-    pick(normalizedPosition, scene, camera, time) {
+    pick(normalizedPosition, scene, camera) {
         if(!popupIsOpen) {
             if (this.pickedObject) {
                 this.pickedObject = undefined;
@@ -92,17 +93,18 @@ class PickHelper {
             this.raycaster.setFromCamera(normalizedPosition, camera);
             const intersectedObjects = this.raycaster.intersectObjects(scene.children);
             if (intersectedObjects.length) {
-            this.pickedObject = intersectedObjects[0].object;
-            // save its color
-            // this.pickedObjectSavedColor = this.pickedObject.material.emissive.getHex();
-            // set its emissive color to flashing red/yellow
-            // this.pickedObject.material.emissive.setHex((time * 8) % 2 > 1 ? 0xFFFF00 : 0xFF0000);
-            // check if the picked object is the ground plane
-            if (this.pickedObject.userData.id) {
-                console.log(this.pickedObject.userData.id);
-                openPopup(this.pickedObject.userData);
-            }
-            clearPickPosition();
+                this.pickedObject = intersectedObjects[0].object;
+                console.log(intersectedObjects);
+                // save its color
+                // this.pickedObjectSavedColor = this.pickedObject.material.emissive.getHex();
+                // set its emissive color to flashing red/yellow
+                // this.pickedObject.material.emissive.setHex((time * 8) % 2 > 1 ? 0xFFFF00 : 0xFF0000);
+                // check if the picked object is the ground plane
+                if (this.pickedObject.userData.id) {
+                    console.log(this.pickedObject.userData.id);
+                    openPopup(this.pickedObject.userData);
+                }
+                clearPickPosition();
             }
         }
     }
@@ -124,16 +126,17 @@ function setPickPosition(event) {
   const pos = getCanvasRelativePosition(event);
   pickPosition.x = (pos.x / canvas.clientWidth ) *  2 - 1;
   pickPosition.y = (pos.y / canvas.clientHeight) * -2 + 1;  // note we flip Y
+  pickHelper.pick(pickPosition, scene, camera);
 }
  
 function clearPickPosition() {
-  pickPosition.x = -100000;
-  pickPosition.y = -100000;
+  pickPosition.x = -1000000;
+  pickPosition.y = -1000000;
 }
  
 window.addEventListener('click', setPickPosition);
 window.addEventListener('mouseup', clearPickPosition);
-// window.addEventListener('mouseleave', clearPickPosition);
+window.addEventListener('mouseleave', clearPickPosition);
 
 // window.addEventListener('touchstart', (event) => {
 //     // prevent the window from scrolling
@@ -141,11 +144,11 @@ window.addEventListener('mouseup', clearPickPosition);
 //     setPickPosition(event.touches[0]);
 //   }, {passive: false});
    
-  window.addEventListener('touchmove', (event) => {
-    setPickPosition(event.touches[0]);
-  });
-   
-  window.addEventListener('touchend', clearPickPosition);
+window.addEventListener('touchmove', (event) => {
+setPickPosition(event.touches[0]);
+});
+
+window.addEventListener('touchend', clearPickPosition);
 
 // picker
 const pickHelper = new PickHelper();
@@ -231,6 +234,6 @@ function animate() {
 
 function render(time) {
     time *= 0.001;
-    pickHelper.pick(pickPosition, scene, camera, time);
+    // pickHelper.pick(pickPosition, scene, camera, time);
     renderer.render( scene, camera );
 }
