@@ -1,5 +1,5 @@
 var THREE = require('three');
-var app = require('./js/app');
+var markerOptions = require('./js/markers');
 var OrbitControls = require('./js/orbitcontrols');
 var panellum = require('pannellum');
 // var MapControls = require('./js/mapControls');
@@ -10,12 +10,7 @@ let panoramaViewer = null;
 
 // marker positions
 
-const markers = [
-    { x: 100, z: 100, id: 'p1', imageUrl: 'assets/demo4', vaov: 180, vOffset: 0, maxpitch: 40, minpitch: -90, htmlContent: '' },
-    { x: 100, z: 200, id: 'p2', imageUrl: 'assets/demo4', vaov: 180, vOffset: 0, maxpitch: 40, minpitch: -90, htmlContent: '' },
-    { x: 200, z: 100, id: 'p3', imageUrl: 'assets/demo4', vaov: 180, vOffset: 0, maxpitch: 40, minpitch: -90, htmlContent: '' },
-    { x: 200, z: 200, id: 'p4', imageUrl: 'assets/demo4', vaov: 180, vOffset: 0, maxpitch: 40, minpitch: -90, htmlContent: '' },
-];
+const markers = Object.values(markerOptions.options);
 
 
 var MapControls = function ( object, domElement ) {
@@ -68,7 +63,6 @@ function openPopup(userData) {
             "loadButtonLabel": "Ielādēt",
             "loadingLabel": "Ielādē...",
             "bylineLabel": "",    
-        
             "noPanoramaError": "",
             "fileAccessError": "Nav iespējams ielādēt attēlu.",
             "malformedURLError": "",
@@ -153,10 +147,9 @@ window.addEventListener('mouseup', clearPickPosition);
    
   window.addEventListener('touchend', clearPickPosition);
 
-  // picker
-  const pickHelper = new PickHelper();
+// picker
+const pickHelper = new PickHelper();
 
-app.init();
 
 var camera, controls, scene, renderer;
 init();
@@ -164,13 +157,13 @@ init();
 animate();
 function init() {
     scene = new THREE.Scene();
-    scene.background = new THREE.Color( 0xcccccc );
-    scene.fog = new THREE.FogExp2( 0xcccccc, 0.002 );
+    scene.background = new THREE.Color( "rgb(132, 169, 164)" );
+    scene.fog = new THREE.FogExp2( scene.background, 0.001 );
     renderer = new THREE.WebGLRenderer( { canvas: navCanvas, antialias: true } );
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( window.innerWidth, window.innerHeight );
     document.body.appendChild( renderer.domElement );
-    camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 1000 );
+    camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 4000 );
     camera.position.set( 400, 200, 0 );
     // controls
     controls = new MapControls( camera, renderer.domElement );
@@ -184,12 +177,13 @@ function init() {
     // world
     var geometry = new THREE.BoxBufferGeometry( 1, 1, 1 );
     geometry.translate( 0, 0.5, 0 );
+    var texture = new THREE.TextureLoader().load( "assets/bg.jpg" );
     var material = new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } );
     
-    var planeGeometry = new THREE.PlaneGeometry( 300, 300, 32 );
-    var planeMaterial = new THREE.MeshBasicMaterial( {color: 0xffff00, side: THREE.DoubleSide} );
+    var planeGeometry = new THREE.PlaneGeometry( 3000, 3000, 32 );
+    var planeMaterial = new THREE.MeshBasicMaterial( {color: 0xffffff,  map: texture, side: THREE.DoubleSide} );
     var plane = new THREE.Mesh( planeGeometry, planeMaterial );
-    plane.rotation.x = Math.PI / 2;
+    plane.rotation.x = - Math.PI / 2;
     scene.add( plane );
 
     for(let i = 0; i < markers.length; i++) {
