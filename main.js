@@ -2,8 +2,6 @@ var THREE = require('three');
 var markerOptions = require('./js/markers');
 var OrbitControls = require('./js/orbitcontrols');
 var panellum = require('pannellum');
-// var gpuPicker = require('./js/gpupicker');
-// var MapControls = require('./js/mapControls');
 
 // initialize stuff
 const canvas = document.getElementById('navCanvas');
@@ -153,14 +151,13 @@ window.addEventListener('touchend', clearPickPosition);
 // picker
 const pickHelper = new PickHelper();
 
-
 var camera, controls, scene, renderer;
 init();
 //render(); // remove when using next line for animation loop (requestAnimationFrame)
 animate();
 function init() {
     scene = new THREE.Scene();
-    scene.background = new THREE.Color( "rgb(132, 169, 164)" );
+    scene.background = new THREE.Color( "rgb(203, 225, 228)" );
     scene.fog = new THREE.FogExp2( scene.background, 0.001 );
     renderer = new THREE.WebGLRenderer( { canvas: navCanvas, antialias: true } );
     renderer.setPixelRatio( window.devicePixelRatio );
@@ -178,19 +175,28 @@ function init() {
     controls.maxDistance = 500;
     controls.maxPolarAngle = Math.PI / 2;
     // world
-    var geometry = new THREE.BoxBufferGeometry( 1, 1, 1 );
-    geometry.translate( 0, 0.5, 0 );
-    var texture = new THREE.TextureLoader().load( "assets/bg.jpg" );
-    var material = new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } );
+    // var geometry = new THREE.BoxBufferGeometry( 1, 1, 1 );
+    var legGeometry = new THREE.CylinderGeometry(0.1, 0.1, 1, 8, 1, false);
+    var headGeometry = new THREE.SphereGeometry(0.5, 10, 10);
+    headGeometry.translate(0, 2.5, 0);
+    headGeometry.scale(1, 0.2, 1);
+    var modelGeometry = new THREE.Geometry();
+    modelGeometry.merge(legGeometry);
+    modelGeometry.merge(headGeometry);
     
-    var planeGeometry = new THREE.PlaneGeometry( 3000, 3000, 32 );
+    var texture = new THREE.TextureLoader().load( "assets/bg.jpg" );
+    var material = new THREE.MeshPhongMaterial( { color: 0x2194ce, emissive: 0xff0000, flatShading: false } );
+
+    var bufGeometry = new THREE.BufferGeometry().fromGeometry(modelGeometry);
+    
+    var planeGeometry = new THREE.PlaneGeometry( 4000, 4000, 32 );
     var planeMaterial = new THREE.MeshBasicMaterial( {color: 0xffffff,  map: texture, side: THREE.DoubleSide} );
     var plane = new THREE.Mesh( planeGeometry, planeMaterial );
     plane.rotation.x = - Math.PI / 2;
     scene.add( plane );
 
     for(let i = 0; i < markers.length; i++) {
-        var mesh = new THREE.Mesh(geometry, material);
+        var mesh = new THREE.Mesh(bufGeometry, material);
         mesh.position.x = markers[i].x;
         mesh.position.y = 0;
         mesh.position.z = markers[i].z;
@@ -217,7 +223,6 @@ function init() {
     scene.add( light );
     var light = new THREE.AmbientLight( 0x222222 );
     scene.add( light );
-    //
     window.addEventListener( 'resize', onWindowResize, false );
 }
 function onWindowResize() {
@@ -226,14 +231,13 @@ function onWindowResize() {
     renderer.setSize( window.innerWidth, window.innerHeight );
     console.log(controls);
 }
+
 function animate() {
     requestAnimationFrame( animate );
     controls.update();
     render();
 }
 
-function render(time) {
-    time *= 0.001;
-    // pickHelper.pick(pickPosition, scene, camera, time);
+function render() {
     renderer.render( scene, camera );
 }
