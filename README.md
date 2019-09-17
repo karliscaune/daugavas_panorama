@@ -1,6 +1,7 @@
 # Daugavas panorāma
 
 Interface for a virtual exhibition of panoramas of Daugava
+https://karliscaune.github.io/daugavas_panorama/
 
 ## Build
 
