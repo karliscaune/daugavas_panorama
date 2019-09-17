@@ -172,8 +172,8 @@ function init() {
     // controls
     controls = new OrbitControls( camera, renderer.domElement );
     // controls.addEventListener( 'change', render ); // call this only in static scenes (i.e., if there is no animation loop)
-    controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
-    controls.dampingFactor = 0.85;
+    controls.enableDamping = true; 
+    controls.dampingFactor = 0.75;
     controls.screenSpacePanning = false;
     controls.minDistance = 500;
     controls.maxDistance = 500;
@@ -210,11 +210,11 @@ function init() {
     topTexture.anisotropy = maxAnisotropy;
     var shadowMaterial = new THREE.MeshBasicMaterial( { color: 0xffffff, map: shadowTexture, side: THREE.DoubleSide, transparent: true } );
     
-    var planeGeometry = new THREE.PlaneGeometry( 4000, 4000, 32 );
-    var planeMaterial = new THREE.MeshBasicMaterial( {color: 0xffffff,  map: bgTexture, side: THREE.DoubleSide} );
-    var plane = new THREE.Mesh( planeGeometry, planeMaterial );
-    plane.rotation.x = - Math.PI / 2;
-    scene.add( plane );
+    var groundPlaneGeometry = new THREE.PlaneGeometry( 4000, 4000, 1, 1 );
+    var groundPlaneMaterial = new THREE.MeshBasicMaterial( {color: 0xffffff,  map: bgTexture, side: THREE.DoubleSide} );
+    var groundPlane = new THREE.Mesh( groundPlaneGeometry, groundPlaneMaterial );
+    groundPlane.rotation.x = - Math.PI / 2;
+    scene.add( groundPlane );
 
     for(let i = 0; i < markers.length; i++) {
         var mesh = new THREE.Mesh(baseGeometry, baseMaterial);
@@ -237,9 +237,6 @@ function init() {
         shadowMesh.position.y = 1;
         shadowMesh.rotation.x = Math.PI / 2;
 
-        // mesh.scale.x = 20;
-        // mesh.scale.y = 100;
-        // mesh.scale.z = 20;
         mesh.userData.id = markers[i].id;
         mesh.userData.imageUrl = markers[i].imageUrl;
         mesh.userData.vaov = markers[i].vaov;
@@ -247,6 +244,15 @@ function init() {
         mesh.userData.maxpitch = markers[i].maxpitch;
         mesh.userData.minpitch = markers[i].minpitch;
         mesh.userData.htmlContent = markers[i].htmlContent;
+
+        topMesh.userData.id = markers[i].id;
+        topMesh.userData.imageUrl = markers[i].imageUrl;
+        topMesh.userData.vaov = markers[i].vaov;
+        topMesh.userData.vOffset = markers[i].vOffset;
+        topMesh.userData.maxpitch = markers[i].maxpitch;
+        topMesh.userData.minpitch = markers[i].minpitch;
+        topMesh.userData.htmlContent = markers[i].htmlContent;
+
         mesh.updateMatrix();
         mesh.matrixAutoUpdate = false;
         baseMeshes.push(mesh);
