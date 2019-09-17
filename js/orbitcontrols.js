@@ -16,10 +16,10 @@
 
 THREE.OrbitControls = function ( object, domElement ) {
 
-	this.maxX = 500;
-	this.minX = -500;
-	this.maxZ = 500;
-	this.minZ = -500;
+	this.maxX = 200;
+	this.minX = -400;
+	this.maxZ = 900;
+	this.minZ = -900;
 
 	this.object = object;
 
@@ -56,11 +56,11 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 	// This option actually enables dollying in and out; left as "zoom" for backwards compatibility.
 	// Set to false to disable zooming
-	this.enableZoom = true;
+	this.enableZoom = false;
 	this.zoomSpeed = 1.0;
 
 	// Set to false to disable rotating
-	this.enableRotate = true;
+	this.enableRotate = false;
 	this.rotateSpeed = 1.0;
 
 	// Set to false to disable panning
@@ -314,6 +314,10 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 		sphericalDelta.theta -= angle;
 
+	}
+
+	this.rotateLeft = function(angle) {
+		sphericalDelta.theta -= angle;
 	}
 
 	function rotateUp( angle ) {
@@ -599,17 +603,8 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 	}
 
-	function handleTouchStartRotate( event ) {
-
-		//console.log( 'handleTouchStartRotate' );
-
-		rotateStart.set( event.touches[ 0 ].pageX, event.touches[ 0 ].pageY );
-
-	}
-
 	function handleTouchStartDollyPan( event ) {
 
-		//console.log( 'handleTouchStartDollyPan' );
 
 		if ( scope.enableZoom ) {
 
@@ -624,8 +619,8 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 		if ( scope.enablePan ) {
 
-			var x = 0.5 * ( event.touches[ 0 ].pageX + event.touches[ 1 ].pageX );
-			var y = 0.5 * ( event.touches[ 0 ].pageY + event.touches[ 1 ].pageY );
+			var x = 0.5 * ( event.touches[ 0 ].pageX );
+			var y = 0.5 * ( event.touches[ 0 ].pageY );
 
 			panStart.set( x, y );
 
@@ -657,27 +652,10 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 		//console.log( 'handleTouchMoveDollyPan' );
 
-		if ( scope.enableZoom ) {
-
-			var dx = event.touches[ 0 ].pageX - event.touches[ 1 ].pageX;
-			var dy = event.touches[ 0 ].pageY - event.touches[ 1 ].pageY;
-
-			var distance = Math.sqrt( dx * dx + dy * dy );
-
-			dollyEnd.set( 0, distance );
-
-			dollyDelta.set( 0, Math.pow( dollyEnd.y / dollyStart.y, scope.zoomSpeed ) );
-
-			dollyIn( dollyDelta.y );
-
-			dollyStart.copy( dollyEnd );
-
-		}
-
 		if ( scope.enablePan ) {
 
-			var x = 0.5 * ( event.touches[ 0 ].pageX + event.touches[ 1 ].pageX );
-			var y = 0.5 * ( event.touches[ 0 ].pageY + event.touches[ 1 ].pageY );
+			var x = 0.5 * ( event.touches[ 0 ].pageX);
+			var y = 0.5 * ( event.touches[ 0 ].pageY);
 
 			panEnd.set( x, y );
 
@@ -730,11 +708,11 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 				} else {
 
-					if ( scope.enableRotate === false ) return;
+					if ( scope.enablePan === false ) return;
 
-					handleMouseDownRotate( event );
+					handleMouseDownPan( event );
 
-					state = STATE.ROTATE;
+					state = STATE.PAN;
 
 				}
 
@@ -783,17 +761,17 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 			case STATE.ROTATE:
 
-				if ( scope.enableRotate === false ) return;
+				if ( scope.enablePan === false ) return;
 
-				handleMouseMoveRotate( event );
+				handleMouseMovePan( event );
 
 				break;
 
 			case STATE.DOLLY:
 
-				if ( scope.enableZoom === false ) return;
+				if ( scope.enablePan === false ) return;
 
-				handleMouseMoveDolly( event );
+				handleMouseMovePan( event );
 
 				break;
 
@@ -857,11 +835,11 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 			case 1:	// one-fingered touch: rotate
 
-				if ( scope.enableRotate === false ) return;
+				if ( scope.enableZoom === false && scope.enablePan === false ) return;
 
-				handleTouchStartRotate( event );
+				handleTouchStartDollyPan( event );
 
-				state = STATE.TOUCH_ROTATE;
+				state = STATE.TOUCH_DOLLY_PAN;
 
 				break;
 
@@ -900,10 +878,10 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 			case 1: // one-fingered touch: rotate
 
-				if ( scope.enableRotate === false ) return;
-				if ( state !== STATE.TOUCH_ROTATE ) return; // is this needed?
+				if ( scope.enableZoom === false && scope.enablePan === false ) return;
+				if ( state !== STATE.TOUCH_DOLLY_PAN ) return; // is this needed?
 
-				handleTouchMoveRotate( event );
+				handleTouchMoveDollyPan( event );
 
 				break;
 

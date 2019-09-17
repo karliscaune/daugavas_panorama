@@ -12,20 +12,20 @@ let panoramaViewer = null;
 const markers = Object.values(markerOptions.options);
 
 
-var MapControls = function ( object, domElement ) {
+// var MapControls = function ( object, domElement ) {
 
-	OrbitControls.call( this, object, domElement );
+// 	OrbitControls.call( this, object, domElement );
 
-	this.mouseButtons.LEFT = THREE.MOUSE.PAN;
-	this.mouseButtons.RIGHT = THREE.MOUSE.ROTATE;
+// 	this.mouseButtons.LEFT = THREE.MOUSE.PAN;
+// 	this.mouseButtons.RIGHT = THREE.MOUSE.PAN;
 
-	// this.touches.ONE = THREE.TOUCH.PAN;
-	// this.touches.TWO = THREE.TOUCH.DOLLY_ROTATE;
+// 	// this.touches.ONE = THREE.TOUCH.PAN;
+// 	// this.touches.TWO = THREE.TOUCH.DOLLY_ROTATE;
 
-};
+// };
 
-MapControls.prototype = Object.create( THREE.EventDispatcher.prototype );
-MapControls.prototype.constructor = MapControls;
+// MapControls.prototype = Object.create( THREE.EventDispatcher.prototype );
+// MapControls.prototype.constructor = MapControls;
 
 const closeButton = document.getElementById('closeButton');
 const popup = document.getElementById('panoramaPopup');
@@ -36,7 +36,6 @@ closeButton.addEventListener('click', closePopup);
 function closePopup() {
     popup.classList.remove('visible');
     popupIsOpen = false;
-    // TODO: destroy the panorama here
     if(panoramaViewer) {
         panoramaViewer.destroy();
     }
@@ -152,21 +151,25 @@ window.addEventListener('touchend', clearPickPosition);
 const pickHelper = new PickHelper();
 
 var camera, controls, scene, renderer;
+
+var topMeshes = [];
+var baseMeshes = [];
+
 init();
 //render(); // remove when using next line for animation loop (requestAnimationFrame)
 animate();
 function init() {
     scene = new THREE.Scene();
-    scene.background = new THREE.Color( "rgb(203, 225, 228)" );
-    scene.fog = new THREE.FogExp2( scene.background, 0.001 );
-    renderer = new THREE.WebGLRenderer( { canvas: navCanvas, antialias: true } );
+    scene.background = new THREE.Color( "rgb(255, 255, 255)" );
+    scene.fog = new THREE.FogExp2( scene.background, 0.0007 );
+    renderer = new THREE.WebGLRenderer( { canvas: navCanvas, antialias: true, alpha: true } );
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( window.innerWidth, window.innerHeight );
     document.body.appendChild( renderer.domElement );
     camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 4000 );
     camera.position.set( 400, 200, 0 );
     // controls
-    controls = new MapControls( camera, renderer.domElement );
+    controls = new OrbitControls( camera, renderer.domElement );
     // controls.addEventListener( 'change', render ); // call this only in static scenes (i.e., if there is no animation loop)
     controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
     controls.dampingFactor = 0.85;
@@ -174,35 +177,52 @@ function init() {
     controls.minDistance = 500;
     controls.maxDistance = 500;
     controls.maxPolarAngle = Math.PI / 2;
+    controls.enableZoom = false;
+    controls.enableKeys = false;
+    controls.rotateLeft(Math.PI / 2.8);
     // world
-    // var geometry = new THREE.BoxBufferGeometry( 1, 1, 1 );
-    var legGeometry = new THREE.CylinderGeometry(0.1, 0.1, 1, 8, 1, false);
-    var headGeometry = new THREE.SphereGeometry(0.5, 10, 10);
-    headGeometry.translate(0, 2.5, 0);
-    headGeometry.scale(1, 0.2, 1);
-    var modelGeometry = new THREE.Geometry();
-    modelGeometry.merge(legGeometry);
-    modelGeometry.merge(headGeometry);
     
-    var texture = new THREE.TextureLoader().load( "assets/bg.jpg" );
-    var material = new THREE.MeshPhongMaterial( { color: 0x2194ce, emissive: 0xff0000, flatShading: false } );
+    var bgTexture = new THREE.TextureLoader().load( "assets/bg.jpg" );
 
-    var bufGeometry = new THREE.BufferGeometry().fromGeometry(modelGeometry);
+    var maxAnisotropy = renderer.capabilities.getMaxAnisotropy();
+	bgTexture.anisotropy = maxAnisotropy;
+
+    // Pin geometry and materials
+    var baseGeometry = new THREE.PlaneGeometry(40, 60, 1);
+    var topGeometry = new THREE.PlaneGeometry(28, 28, 1);
+    
+    var baseTexture = new THREE.TextureLoader().load( "assets/base-texture.png" );
+    baseTexture.anisotropy = maxAnisotropy;
+    var baseMaterial = new THREE.MeshBasicMaterial( { map: baseTexture, side: THREE.DoubleSide, transparent: true } );
+
+    var topTexture = new THREE.TextureLoader().load( "assets/top-texture.png" );
+    topTexture.anisotropy = maxAnisotropy;
+    var topMaterial = new THREE.MeshBasicMaterial( { color: 0xffffff, map: topTexture, side: THREE.DoubleSide, transparent: true } );
     
     var planeGeometry = new THREE.PlaneGeometry( 4000, 4000, 32 );
-    var planeMaterial = new THREE.MeshBasicMaterial( {color: 0xffffff,  map: texture, side: THREE.DoubleSide} );
+    var planeMaterial = new THREE.MeshBasicMaterial( {color: 0xffffff,  map: bgTexture, side: THREE.DoubleSide} );
     var plane = new THREE.Mesh( planeGeometry, planeMaterial );
     plane.rotation.x = - Math.PI / 2;
     scene.add( plane );
 
     for(let i = 0; i < markers.length; i++) {
-        var mesh = new THREE.Mesh(bufGeometry, material);
+        var mesh = new THREE.Mesh(baseGeometry, baseMaterial);
+        var topMesh = new THREE.Mesh(topGeometry, topMaterial);
+
+        mesh.name = 'base-object';
+        topMesh.name = 'top-object';
+
         mesh.position.x = markers[i].x;
-        mesh.position.y = 0;
+        mesh.position.y = 40;
         mesh.position.z = markers[i].z;
-        mesh.scale.x = 20;
-        mesh.scale.y = 100;
-        mesh.scale.z = 20;
+
+        topMesh.position.x = markers[i].x;
+        topMesh.position.y = 51;
+        topMesh.position.z = markers[i].z + 1;
+
+        // mesh.scale.x = 20;
+        // mesh.scale.y = 100;
+        // mesh.scale.z = 20;
         mesh.userData.id = markers[i].id;
         mesh.userData.imageUrl = markers[i].imageUrl;
         mesh.userData.vaov = markers[i].vaov;
@@ -212,7 +232,13 @@ function init() {
         mesh.userData.htmlContent = markers[i].htmlContent;
         mesh.updateMatrix();
         mesh.matrixAutoUpdate = false;
+        baseMeshes.push(mesh);
         scene.add( mesh );
+        topMesh.updateMatrix();
+        topMesh.matrixAutoUpdate = false;
+        // topMesh.geometry.attributes.position.needsUpdate = true;
+        topMeshes.push(topMesh);
+        scene.add( topMesh );
     }
     // lights
     var light = new THREE.DirectionalLight( 0xffffff );
@@ -234,6 +260,19 @@ function onWindowResize() {
 
 function animate() {
     requestAnimationFrame( animate );
+    scene.children.forEach(el => {
+        if(el.name == 'top-object') {
+            el.rotation.z += 0.005;
+            // el.lookAt(camera.position);
+            el.updateMatrix();
+        };
+
+        if(el.name == 'base-object') {
+            // el.lookAt(camera.position);
+            el.updateMatrix();
+        };
+
+    });
     controls.update();
     render();
 }
