@@ -161,7 +161,8 @@ animate();
 function init() {
     scene = new THREE.Scene();
     scene.background = new THREE.Color( "rgb(255, 255, 255)" );
-    scene.fog = new THREE.FogExp2( scene.background, 0.0007 );
+    // scene.fog = new THREE.FogExp2( scene.background, 0.0027 );
+    scene.fog = new THREE.Fog(scene.background, 0, 2000);
     renderer = new THREE.WebGLRenderer( { canvas: navCanvas, antialias: true, alpha: true } );
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( window.innerWidth, window.innerHeight );
@@ -180,6 +181,11 @@ function init() {
     controls.enableZoom = false;
     controls.enableKeys = false;
     controls.rotateLeft(Math.PI / 2.8);
+
+    // effects
+
+    // const composer = new THREE.EffectComposer(renderer);
+
     // world
     
     var bgTexture = new THREE.TextureLoader().load( "assets/bg.jpg" );
@@ -190,6 +196,7 @@ function init() {
     // Pin geometry and materials
     var baseGeometry = new THREE.PlaneGeometry(40, 60, 1);
     var topGeometry = new THREE.PlaneGeometry(28, 28, 1);
+    var shadowGeometry = new THREE.PlaneGeometry(60, 60, 1);
     
     var baseTexture = new THREE.TextureLoader().load( "assets/base-texture.png" );
     baseTexture.anisotropy = maxAnisotropy;
@@ -198,6 +205,10 @@ function init() {
     var topTexture = new THREE.TextureLoader().load( "assets/top-texture.png" );
     topTexture.anisotropy = maxAnisotropy;
     var topMaterial = new THREE.MeshBasicMaterial( { color: 0xffffff, map: topTexture, side: THREE.DoubleSide, transparent: true } );
+
+    var shadowTexture = new THREE.TextureLoader().load( "assets/shadow.png" );
+    topTexture.anisotropy = maxAnisotropy;
+    var shadowMaterial = new THREE.MeshBasicMaterial( { color: 0xffffff, map: shadowTexture, side: THREE.DoubleSide, transparent: true } );
     
     var planeGeometry = new THREE.PlaneGeometry( 4000, 4000, 32 );
     var planeMaterial = new THREE.MeshBasicMaterial( {color: 0xffffff,  map: bgTexture, side: THREE.DoubleSide} );
@@ -208,17 +219,23 @@ function init() {
     for(let i = 0; i < markers.length; i++) {
         var mesh = new THREE.Mesh(baseGeometry, baseMaterial);
         var topMesh = new THREE.Mesh(topGeometry, topMaterial);
+        var shadowMesh = new THREE.Mesh(shadowGeometry, shadowMaterial);
 
         mesh.name = 'base-object';
         topMesh.name = 'top-object';
 
         mesh.position.x = markers[i].x;
-        mesh.position.y = 40;
+        mesh.position.y = 35;
         mesh.position.z = markers[i].z;
 
         topMesh.position.x = markers[i].x;
-        topMesh.position.y = 51;
+        topMesh.position.y = 46;
         topMesh.position.z = markers[i].z + 1;
+
+        shadowMesh.position.x = markers[i].x;
+        shadowMesh.position.z = markers[i].z;
+        shadowMesh.position.y = 1;
+        shadowMesh.rotation.x = Math.PI / 2;
 
         // mesh.scale.x = 20;
         // mesh.scale.y = 100;
@@ -239,6 +256,7 @@ function init() {
         // topMesh.geometry.attributes.position.needsUpdate = true;
         topMeshes.push(topMesh);
         scene.add( topMesh );
+        scene.add(shadowMesh);
     }
     // lights
     var light = new THREE.DirectionalLight( 0xffffff );
