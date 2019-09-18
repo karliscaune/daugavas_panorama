@@ -10,6 +10,7 @@ let panoramaViewer = null;
 // marker positions
 
 const markers = Object.values(markerOptions.options);
+var baseMeshes = [];
 
 
 // var MapControls = function ( object, domElement ) {
@@ -29,12 +30,104 @@ const markers = Object.values(markerOptions.options);
 
 const closeButton = document.getElementById('closeButton');
 const popup = document.getElementById('panoramaPopup');
+const popupLogosElement = document.getElementById('panoramaLogos');
+const panoramaPrevButton = document.getElementById('panoramaPrev');
+const panoramaNextButton = document.getElementById('panoramaNext');
 let popupIsOpen = false;
+let currentUserData = 1;
+
 
 closeButton.addEventListener('click', closePopup);
+// panoramaPrevButton.addEventListener('click', openAnotherPanorama(-1));
+// panoramaNextButton.addEventListener('click', openAnotherPanorama(1));
+panoramaPrevButton.addEventListener('click', openPrevPanorama);
+panoramaNextButton.addEventListener('click', openNextPanorama);
+
+function openPrevPanorama() {
+    let userData = null;
+    if(panoramaViewer) {
+        panoramaViewer.destroy();
+    }
+    if(baseMeshes.length > 0) {
+        if(currentUserData == 0) {
+            userData = baseMeshes[24].userData;
+        } else {
+            userData = baseMeshes[currentUserData - 1].userData;
+        }
+        
+        currentUserData = userData.index;
+        panoramaViewer = pannellum.viewer('panorama', {
+            "type": "equirectangular",
+            "panorama": userData.imageUrl + '.jpg',
+            "vaov": userData.vaov,
+            "vOffset": userData.vOffset,
+            "maxPitch": userData.maxpitch,
+            "minPitch": userData.minpitch,
+            "showZoomCtrl": false,
+            "showFullscreenCtrl": false,
+            "autoLoad": true,
+            "autoRotate": 1,
+            "friction": 0.05,
+            "strings": {
+                "loadButtonLabel": "Ielādēt",
+                "loadingLabel": "Ielādē...",
+                "bylineLabel": "",    
+                "noPanoramaError": "",
+                "fileAccessError": "Nav iespējams ielādēt attēlu.",
+                "malformedURLError": "",
+                "iOS8WebGLError": "",
+                "genericWebGLError": "Jūsu interneta pārlūks neatbalsta nepieciešamās WebGL funkcijas.",
+                "textureSizeError": "Ielādētais attēls ir pārāk liels Jūsu ierīcei.",
+                "unknownError": "Neizdevās ielādēt panorāmu."
+            }
+        });
+    }
+}
+
+function openNextPanorama() {
+    let userData = null;
+    if(panoramaViewer) {
+        panoramaViewer.destroy();
+    }
+    if(baseMeshes.length > 0) {
+        if(currentUserData == 24) {
+            userData = baseMeshes[0].userData;
+        } else {
+            userData = baseMeshes[currentUserData + 1].userData;
+        }
+        currentUserData = userData.index;
+        panoramaViewer = pannellum.viewer('panorama', {
+            "type": "equirectangular",
+            "panorama": userData.imageUrl + '.jpg',
+            "vaov": userData.vaov,
+            "vOffset": userData.vOffset,
+            "maxPitch": userData.maxpitch,
+            "minPitch": userData.minpitch,
+            "showZoomCtrl": false,
+            "showFullscreenCtrl": false,
+            "autoLoad": true,
+            "autoRotate": 1,
+            "friction": 0.05,
+            "strings": {
+                "loadButtonLabel": "Ielādēt",
+                "loadingLabel": "Ielādē...",
+                "bylineLabel": "",    
+                "noPanoramaError": "",
+                "fileAccessError": "Nav iespējams ielādēt attēlu.",
+                "malformedURLError": "",
+                "iOS8WebGLError": "",
+                "genericWebGLError": "Jūsu interneta pārlūks neatbalsta nepieciešamās WebGL funkcijas.",
+                "textureSizeError": "Ielādētais attēls ir pārāk liels Jūsu ierīcei.",
+                "unknownError": "Neizdevās ielādēt panorāmu."
+            }
+        });
+    }
+}
+
 
 function closePopup() {
     popup.classList.remove('visible');
+    popupLogosElement.classList.remove('visible');
     popupIsOpen = false;
     if(panoramaViewer) {
         panoramaViewer.destroy();
@@ -44,6 +137,7 @@ function closePopup() {
 function openPopup(userData) {
     console.log(userData);
     popupIsOpen = true;
+    currentUserData = userData.index;
     
     panoramaViewer = pannellum.viewer('panorama', {
         "type": "equirectangular",
@@ -70,6 +164,12 @@ function openPopup(userData) {
             "unknownError": "Neizdevās ielādēt panorāmu."
         }
     });
+
+    panoramaViewer.on('load',
+    function () {
+        popupLogosElement.classList.add('visible');
+    }
+);
 
     popup.classList.add('visible');
 }
@@ -152,8 +252,7 @@ const pickHelper = new PickHelper();
 
 var camera, controls, scene, renderer;
 
-var topMeshes = [];
-var baseMeshes = [];
+
 
 init();
 //render(); // remove when using next line for animation loop (requestAnimationFrame)
@@ -188,26 +287,20 @@ function init() {
 
     // world
     
-    var bgTexture = new THREE.TextureLoader().load( "assets/bg.jpg" );
+    var bgTexture = new THREE.TextureLoader().load( "assets/bg2.jpg" );
 
     var maxAnisotropy = renderer.capabilities.getMaxAnisotropy();
 	bgTexture.anisotropy = maxAnisotropy;
 
     // Pin geometry and materials
-    var baseGeometry = new THREE.PlaneGeometry(40, 60, 1);
-    var topGeometry = new THREE.PlaneGeometry(28, 28, 1);
+    var baseGeometry = new THREE.PlaneGeometry(37, 60, 1);
     var shadowGeometry = new THREE.PlaneGeometry(60, 60, 1);
     
-    var baseTexture = new THREE.TextureLoader().load( "assets/base-texture.png" );
+    var baseTexture = new THREE.TextureLoader().load( "assets/base-texture-2.png" );
     baseTexture.anisotropy = maxAnisotropy;
     var baseMaterial = new THREE.MeshBasicMaterial( { map: baseTexture, side: THREE.DoubleSide, transparent: true } );
 
-    var topTexture = new THREE.TextureLoader().load( "assets/top-texture.png" );
-    topTexture.anisotropy = maxAnisotropy;
-    var topMaterial = new THREE.MeshBasicMaterial( { color: 0xffffff, map: topTexture, side: THREE.DoubleSide, transparent: true } );
-
     var shadowTexture = new THREE.TextureLoader().load( "assets/shadow.png" );
-    topTexture.anisotropy = maxAnisotropy;
     var shadowMaterial = new THREE.MeshBasicMaterial( { color: 0xffffff, map: shadowTexture, side: THREE.DoubleSide, transparent: true } );
     
     var groundPlaneGeometry = new THREE.PlaneGeometry( 4000, 4000, 1, 1 );
@@ -218,19 +311,13 @@ function init() {
 
     for(let i = 0; i < markers.length; i++) {
         var mesh = new THREE.Mesh(baseGeometry, baseMaterial);
-        var topMesh = new THREE.Mesh(topGeometry, topMaterial);
         var shadowMesh = new THREE.Mesh(shadowGeometry, shadowMaterial);
 
         mesh.name = 'base-object';
-        topMesh.name = 'top-object';
 
         mesh.position.x = markers[i].x;
         mesh.position.y = 35;
         mesh.position.z = markers[i].z;
-
-        topMesh.position.x = markers[i].x;
-        topMesh.position.y = 46;
-        topMesh.position.z = markers[i].z + 1;
 
         shadowMesh.position.x = markers[i].x;
         shadowMesh.position.z = markers[i].z;
@@ -244,24 +331,12 @@ function init() {
         mesh.userData.maxpitch = markers[i].maxpitch;
         mesh.userData.minpitch = markers[i].minpitch;
         mesh.userData.htmlContent = markers[i].htmlContent;
-
-        topMesh.userData.id = markers[i].id;
-        topMesh.userData.imageUrl = markers[i].imageUrl;
-        topMesh.userData.vaov = markers[i].vaov;
-        topMesh.userData.vOffset = markers[i].vOffset;
-        topMesh.userData.maxpitch = markers[i].maxpitch;
-        topMesh.userData.minpitch = markers[i].minpitch;
-        topMesh.userData.htmlContent = markers[i].htmlContent;
+        mesh.userData.index = markers[i].index;
 
         mesh.updateMatrix();
         mesh.matrixAutoUpdate = false;
         baseMeshes.push(mesh);
         scene.add( mesh );
-        topMesh.updateMatrix();
-        topMesh.matrixAutoUpdate = false;
-        // topMesh.geometry.attributes.position.needsUpdate = true;
-        topMeshes.push(topMesh);
-        scene.add( topMesh );
         scene.add(shadowMesh);
     }
     // lights
@@ -284,19 +359,13 @@ function onWindowResize() {
 
 function animate() {
     requestAnimationFrame( animate );
-    scene.children.forEach(el => {
-        if(el.name == 'top-object') {
-            el.rotation.z += 0.005;
-            // el.lookAt(camera.position);
-            el.updateMatrix();
-        };
+    // scene.children.forEach(el => {
+    //     if(el.name == 'base-object') {
+    //         // el.lookAt(camera.position);
+    //         el.updateMatrix();
+    //     };
 
-        if(el.name == 'base-object') {
-            // el.lookAt(camera.position);
-            el.updateMatrix();
-        };
-
-    });
+    // });
     controls.update();
     render();
 }
