@@ -1,6 +1,7 @@
 var THREE = require('three');
 var markerOptions = require('./js/markers');
 var panoramaOrder = require('./js/order');
+var placeNames = require('./js/names');
 var panellumTranslations = require('./js/translations');
 var OrbitControls = require('./js/orbitcontrols');
 var panellum = require('pannellum');
@@ -9,10 +10,16 @@ var panellum = require('pannellum');
 const canvas = document.getElementById('navCanvas');
 let panoramaViewer = null;
 
+// Place names
+
+const places = Object.values(placeNames.namePlanes);
+
 // marker positions
 
 const markers = Object.values(markerOptions.options);
+const panoramaCount = markers.length -1;
 var baseMeshes = [];
+var placeMeshes = [];
 
 var panellumStrings = panellumTranslations.strings;
 
@@ -20,21 +27,7 @@ var panellumStrings = panellumTranslations.strings;
 
 const pOrder = Object.values(panoramaOrder.order);
 
-
-// var MapControls = function ( object, domElement ) {
-
-// 	OrbitControls.call( this, object, domElement );
-
-// 	this.mouseButtons.LEFT = THREE.MOUSE.PAN;
-// 	this.mouseButtons.RIGHT = THREE.MOUSE.PAN;
-
-// 	// this.touches.ONE = THREE.TOUCH.PAN;
-// 	// this.touches.TWO = THREE.TOUCH.DOLLY_ROTATE;
-
-// };
-
-// MapControls.prototype = Object.create( THREE.EventDispatcher.prototype );
-// MapControls.prototype.constructor = MapControls;
+// Event listeners
 
 const closeButton = document.getElementById('closeButton');
 const popup = document.getElementById('panoramaPopup');
@@ -71,9 +64,9 @@ function openAnotherPanorama(increment) {
     const nextIndex = pOrder.findIndex(equals) + increment;
     let indexToOpen = 0;
     if(nextIndex < 0) {
-        indexToOpen = pOrder[24];
+        indexToOpen = pOrder[panoramaCount];
     } else {
-        if(nextIndex > 24) {
+        if(nextIndex > panoramaCount) {
             indexToOpen = pOrder[0];
         } else {
             indexToOpen = pOrder[nextIndex];
@@ -135,8 +128,7 @@ function openPopup(userData) {
         "strings": panellumStrings,
     });
 
-    panoramaViewer.on('load',
-    function () {
+    panoramaViewer.on('load', function () {
         popupLogosElement.classList.add('visible');
     }
 );
@@ -162,11 +154,6 @@ class PickHelper {
             if (intersectedObjects.length) {
                 this.pickedObject = intersectedObjects[0].object;
                 console.log(intersectedObjects);
-                // save its color
-                // this.pickedObjectSavedColor = this.pickedObject.material.emissive.getHex();
-                // set its emissive color to flashing red/yellow
-                // this.pickedObject.material.emissive.setHex((time * 8) % 2 > 1 ? 0xFFFF00 : 0xFF0000);
-                // check if the picked object is the ground plane
                 if (this.pickedObject.userData.id) {
                     console.log(this.pickedObject.userData.id);
                     openPopup(this.pickedObject.userData);
@@ -175,7 +162,7 @@ class PickHelper {
             }
         }
     }
-  }
+}
 
 const pickPosition = {x: 0, y: 0};
 clearPickPosition();
@@ -251,10 +238,6 @@ function init() {
     controls.enableKeys = false;
     controls.rotateLeft(Math.PI / 2.8);
 
-    // effects
-
-    // const composer = new THREE.EffectComposer(renderer);
-
     // world
     
     var bgTexture = new THREE.TextureLoader().load( "assets/bg2.jpg" );
@@ -309,6 +292,23 @@ function init() {
         scene.add( mesh );
         scene.add(shadowMesh);
     }
+
+    for(let i = 0; i < places.length; i++) {
+        const texture = new THREE.TextureLoader().load( places[i].imageUrl + ".png" );
+        const material = new THREE.MeshBasicMaterial( {color: 0xffffff,  map: texture, side: THREE.DoubleSide, transparent: true } );
+        const mesh = new THREE.Mesh(new THREE.PlaneGeometry( 100, 100, 1, 1 ), material);
+
+        mesh.name = 'place-name';
+        mesh.position.x = places[i].x;
+        mesh.position.y = 35;
+        mesh.position.z = places[i].z;
+
+        mesh.updateMatrix();
+        mesh.matrixAutoUpdate = false;
+        placeMeshes.push(mesh);
+        scene.add( mesh );
+    }
+
     // lights
     var light = new THREE.DirectionalLight( 0xffffff );
     light.position.set( 1, 1, 1 );
@@ -330,11 +330,10 @@ function onWindowResize() {
 function animate() {
     requestAnimationFrame( animate );
     // scene.children.forEach(el => {
-    //     if(el.name == 'base-object') {
-    //         // el.lookAt(camera.position);
+    //     if(el.name == 'place-name') {
+    //         el.lookAt(camera.position);
     //         el.updateMatrix();
     //     };
-
     // });
     controls.update();
     render();
