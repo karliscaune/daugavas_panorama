@@ -95,23 +95,14 @@ button:focus {outline:0;}
     background-image: url("./logos.png");
     background-repeat: no-repeat;
     background-size: contain;
-    width: 228px;
-    height: 58px;
+    width: 233px;
+    height: 81px;
     display: block;
     left: 20px;
     bottom: 20px;
-}
-
-.logos .logo-background {
-    position: absolute;
-    background-image: url("./logo_bg.png");
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
-    width: 472px;
-    height: 223px;
-    display: block;
-    left: 0;
-    bottom: 0;
+    background-color: white;
+    border: 10px solid white;
+    border-radius: 10px;
 }
 
 #panoramaLogos {
@@ -128,23 +119,6 @@ button:focus {outline:0;}
         width: 228px;
         height: 58px;
     }
-    
-    .logos .logo-background {
-        background-size: 100% 100%;
-        width: 472px;
-        height: 223px;
-    }
-}
-
-#panoramaLogos .logo-images {
-    width: 228px;
-    height: 58px;
-}
-
-#panoramaLogos .logo-background {
-    background-size: 100% 100%;
-    width: 472px;
-    height: 223px;
 }
 
 .heading {

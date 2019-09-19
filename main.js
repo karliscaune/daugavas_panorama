@@ -1,5 +1,7 @@
 var THREE = require('three');
 var markerOptions = require('./js/markers');
+var panoramaOrder = require('./js/order');
+var panellumTranslations = require('./js/translations');
 var OrbitControls = require('./js/orbitcontrols');
 var panellum = require('pannellum');
 
@@ -11,6 +13,12 @@ let panoramaViewer = null;
 
 const markers = Object.values(markerOptions.options);
 var baseMeshes = [];
+
+var panellumStrings = panellumTranslations.strings;
+
+// panorama order
+
+const pOrder = Object.values(panoramaOrder.order);
 
 
 // var MapControls = function ( object, domElement ) {
@@ -34,68 +42,53 @@ const popupLogosElement = document.getElementById('panoramaLogos');
 const panoramaPrevButton = document.getElementById('panoramaPrev');
 const panoramaNextButton = document.getElementById('panoramaNext');
 let popupIsOpen = false;
-let currentUserData = 1;
+// Holds the value of the currently opened panoramas index
+let currentUserData = 1; // This is at first updated by the user clicking on a marker.
 
 
 closeButton.addEventListener('click', closePopup);
-// panoramaPrevButton.addEventListener('click', openAnotherPanorama(-1));
-// panoramaNextButton.addEventListener('click', openAnotherPanorama(1));
 panoramaPrevButton.addEventListener('click', openPrevPanorama);
 panoramaNextButton.addEventListener('click', openNextPanorama);
 
+panoramaPrevButton.addEventListener('touchstart', openPrevPanorama);
+panoramaNextButton.addEventListener('touchstart', openNextPanorama);
+closeButton.addEventListener('touchstart', closePopup);
+
+
 function openPrevPanorama() {
-    let userData = null;
-    if(panoramaViewer) {
-        panoramaViewer.destroy();
-    }
-    if(baseMeshes.length > 0) {
-        if(currentUserData == 0) {
-            userData = baseMeshes[24].userData;
-        } else {
-            userData = baseMeshes[currentUserData - 1].userData;
-        }
-        
-        currentUserData = userData.index;
-        panoramaViewer = pannellum.viewer('panorama', {
-            "type": "equirectangular",
-            "panorama": userData.imageUrl + '.jpg',
-            "vaov": userData.vaov,
-            "vOffset": userData.vOffset,
-            "maxPitch": userData.maxpitch,
-            "minPitch": userData.minpitch,
-            "showZoomCtrl": false,
-            "showFullscreenCtrl": false,
-            "autoLoad": true,
-            "autoRotate": 1,
-            "friction": 0.05,
-            "strings": {
-                "loadButtonLabel": "Ielādēt",
-                "loadingLabel": "Ielādē...",
-                "bylineLabel": "",    
-                "noPanoramaError": "",
-                "fileAccessError": "Nav iespējams ielādēt attēlu.",
-                "malformedURLError": "",
-                "iOS8WebGLError": "",
-                "genericWebGLError": "Jūsu interneta pārlūks neatbalsta nepieciešamās WebGL funkcijas.",
-                "textureSizeError": "Ielādētais attēls ir pārāk liels Jūsu ierīcei.",
-                "unknownError": "Neizdevās ielādēt panorāmu."
-            }
-        });
-    }
+    openAnotherPanorama(-1);
 }
 
 function openNextPanorama() {
-    let userData = null;
+    openAnotherPanorama(1);
+}
+
+function equals(n) {
+    return n == currentUserData;
+}
+
+function openAnotherPanorama(increment) {
+    const nextIndex = pOrder.findIndex(equals) + increment;
+    let indexToOpen = 0;
+    if(nextIndex < 0) {
+        indexToOpen = pOrder[24];
+    } else {
+        if(nextIndex > 24) {
+            indexToOpen = pOrder[0];
+        } else {
+            indexToOpen = pOrder[nextIndex];
+        }
+    }
+    
+    // Update currentUserData with the new index
+    currentUserData = indexToOpen;
+    // Open the panorama
     if(panoramaViewer) {
         panoramaViewer.destroy();
-    }
+    };
+
     if(baseMeshes.length > 0) {
-        if(currentUserData == 24) {
-            userData = baseMeshes[0].userData;
-        } else {
-            userData = baseMeshes[currentUserData + 1].userData;
-        }
-        currentUserData = userData.index;
+        const userData = baseMeshes[currentUserData].userData;
         panoramaViewer = pannellum.viewer('panorama', {
             "type": "equirectangular",
             "panorama": userData.imageUrl + '.jpg',
@@ -108,22 +101,10 @@ function openNextPanorama() {
             "autoLoad": true,
             "autoRotate": 1,
             "friction": 0.05,
-            "strings": {
-                "loadButtonLabel": "Ielādēt",
-                "loadingLabel": "Ielādē...",
-                "bylineLabel": "",    
-                "noPanoramaError": "",
-                "fileAccessError": "Nav iespējams ielādēt attēlu.",
-                "malformedURLError": "",
-                "iOS8WebGLError": "",
-                "genericWebGLError": "Jūsu interneta pārlūks neatbalsta nepieciešamās WebGL funkcijas.",
-                "textureSizeError": "Ielādētais attēls ir pārāk liels Jūsu ierīcei.",
-                "unknownError": "Neizdevās ielādēt panorāmu."
-            }
+            "strings": panellumStrings,
         });
-    }
+    }    
 }
-
 
 function closePopup() {
     popup.classList.remove('visible');
@@ -151,18 +132,7 @@ function openPopup(userData) {
         "autoLoad": true,
         "autoRotate": 1,
         "friction": 0.05,
-        "strings": {
-            "loadButtonLabel": "Ielādēt",
-            "loadingLabel": "Ielādē...",
-            "bylineLabel": "",    
-            "noPanoramaError": "",
-            "fileAccessError": "Nav iespējams ielādēt attēlu.",
-            "malformedURLError": "",
-            "iOS8WebGLError": "",
-            "genericWebGLError": "Jūsu interneta pārlūks neatbalsta nepieciešamās WebGL funkcijas.",
-            "textureSizeError": "Ielādētais attēls ir pārāk liels Jūsu ierīcei.",
-            "unknownError": "Neizdevās ielādēt panorāmu."
-        }
+        "strings": panellumStrings,
     });
 
     panoramaViewer.on('load',
@@ -231,15 +201,15 @@ function clearPickPosition() {
   pickPosition.y = -1000000;
 }
  
-window.addEventListener('click', setPickPosition);
+window.addEventListener('mousedown', setPickPosition);
 window.addEventListener('mouseup', clearPickPosition);
 window.addEventListener('mouseleave', clearPickPosition);
 
-// window.addEventListener('touchstart', (event) => {
-//     // prevent the window from scrolling
-//     event.preventDefault();
-//     setPickPosition(event.touches[0]);
-//   }, {passive: false});
+window.addEventListener('touchstart', (event) => {
+    // prevent the window from scrolling
+    event.preventDefault();
+    setPickPosition(event.touches[0]);
+  }, {passive: false});
    
 window.addEventListener('touchmove', (event) => {
 setPickPosition(event.touches[0]);
