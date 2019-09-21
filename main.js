@@ -6,6 +6,26 @@ var panellumTranslations = require('./js/translations');
 var OrbitControls = require('./js/orbitcontrols');
 var panellum = require('pannellum');
 
+// Get device type
+
+var isIos = false;
+var imagePath = '';
+
+var standalone = window.navigator.standalone,
+    userAgent = window.navigator.userAgent.toLowerCase(),
+    safari = /safari/.test( userAgent ),
+    ios = /iphone|ipod|ipad/.test( userAgent );
+
+if( ios ) {
+    isIos = true;  
+} 
+
+if (isIos || window.screen.width < 600 ) {
+    imagePath = 'assets/small_panoramas/';
+} else {
+    imagePath = 'assets/';
+}
+
 // initialize stuff
 const canvas = document.getElementById('navCanvas');
 let panoramaViewer = null;
@@ -43,9 +63,10 @@ closeButton.addEventListener('click', closePopup);
 panoramaPrevButton.addEventListener('click', openPrevPanorama);
 panoramaNextButton.addEventListener('click', openNextPanorama);
 
+closeButton.addEventListener('touchstart', closePopup);
 panoramaPrevButton.addEventListener('touchstart', openPrevPanorama);
 panoramaNextButton.addEventListener('touchstart', openNextPanorama);
-closeButton.addEventListener('touchstart', closePopup);
+
 
 
 function openPrevPanorama() {
@@ -84,7 +105,7 @@ function openAnotherPanorama(increment) {
         const userData = baseMeshes[currentUserData].userData;
         panoramaViewer = pannellum.viewer('panorama', {
             "type": "equirectangular",
-            "panorama": userData.imageUrl + '.jpg',
+            "panorama": imagePath + userData.imageUrl + '.jpg',
             "vaov": userData.vaov,
             "vOffset": userData.vOffset,
             "maxPitch": userData.maxpitch,
@@ -115,7 +136,7 @@ function openPopup(userData) {
     
     panoramaViewer = pannellum.viewer('panorama', {
         "type": "equirectangular",
-        "panorama": userData.imageUrl + '.jpg',
+        "panorama": imagePath + userData.imageUrl + '.jpg',
         "vaov": userData.vaov,
         "vOffset": userData.vOffset,
         "maxPitch": userData.maxpitch,
