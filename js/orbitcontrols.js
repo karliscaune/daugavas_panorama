@@ -16,10 +16,10 @@
 
 THREE.OrbitControls = function ( object, domElement ) {
 
-	this.maxX = 200;
-	this.minX = -400;
-	this.maxZ = 900;
-	this.minZ = -900;
+	this.maxX = 700;
+	this.minX = -700;
+	this.maxZ = 1200;
+	this.minZ = -1200;
 
 	this.object = object;
 
