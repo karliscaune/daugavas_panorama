@@ -1,5 +1,5 @@
 exports.namePlanes = [
-    { x: 89, z: -689, imageUrl: 'assets/places/vecmilgravis' },
+    { x: 55, z: -695, imageUrl: 'assets/places/vecmilgravis' },
     { x: 140, z: 577, imageUrl: 'assets/places/andrejsala' },
     { x: 160, z: -172, imageUrl: 'assets/places/kundzinsala' },
     { x: -123, z: -439, imageUrl: 'assets/places/krievusala' },

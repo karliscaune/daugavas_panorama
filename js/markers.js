@@ -24,6 +24,8 @@ exports.options = [
     { x:51, z:845, id: 'p23', imageUrl: '23', vaov: 180, vOffset: 0, maxpitch: 40, minpitch: -90, htmlContent: '', index: 22 },
     { x:95, z:840, id: 'p24', imageUrl: '24', vaov: 180, vOffset: 0, maxpitch: 40, minpitch: -90, htmlContent: '', index: 23 },
     { x:75, z:772, id: 'p25', imageUrl: '25', vaov: 180, vOffset: 0, maxpitch: 40, minpitch: -90, htmlContent: '', index: 24 },
+    { x:0, z:636, id: 'p26', imageUrl: '26', vaov: 180, vOffset: 0, maxpitch: 40, minpitch: -90, htmlContent: '', index: 25 },
+    { x:126, z:-687, id: 'p27', imageUrl: '27', vaov: 180, vOffset: 0, maxpitch: 40, minpitch: -90, htmlContent: '', index: 26 },
 ]
 
 // Excel formula for generation
