@@ -6,6 +6,61 @@ var panellumTranslations = require('./js/translations');
 var OrbitControls = require('./js/orbitcontrols');
 var panellum = require('pannellum');
 
+// Get params
+
+var url_string = window.location.href;
+var url = new URL(url_string);
+// Is autoplay enabled?
+var autoplayFlag = url.searchParams.get("autoplay") == '1' ? true : false;
+// How long is idle time?
+var idleTimeInSeconds = url.searchParams.get("wait") ? parseInt(url.searchParams.get("wait")) : 300;
+var idleTime = idleTimeInSeconds * 1000; // convert to milliseconds
+// How fast should panoramas autorotate?
+var autoRotateSpeed = url.searchParams.get("speed") ? parseInt(url.searchParams.get("speed")) : 1;
+
+// Set up idle timer
+
+var isAutoPlaying = false;
+var panoramaInterval;
+// When autorotating, time for rotating a full circle equals 360deg / speed(deg/s) + few seconds of loading
+var slideTime = ((360 / autoRotateSpeed) * 1000) + 2000; // convert to milliseconds
+var waitTimeout;
+
+function startAutoplay() {
+    console.log('started autoplay');
+    isAutoPlaying = true;
+    if(popupIsOpen) {
+        openNextPanorama();
+        panoramaInterval = setInterval(openNextPanorama, slideTime);
+    } else {
+        openPopup(baseMeshes[0].userData);
+        panoramaInterval = setInterval(openNextPanorama, slideTime);
+    }
+}
+
+// needs to be called after any interaction
+function resetWaitTimeout() {
+    console.log('clearing timeout');
+    clearTimeout(waitTimeout);
+    waitTimeout = setTimeout(startAutoplay, idleTime);
+    if(isAutoPlaying) { 
+        isAutoPlaying = false;
+        clearInterval(panoramaInterval);
+    };
+}
+
+if(autoplayFlag) {
+    // set initial timeout
+    waitTimeout = setTimeout(startAutoplay, idleTime);
+    // set event listeners
+    ['touchstart', 'mousedown'].forEach(function(ev) {
+        window.addEventListener(ev, function() {
+            resetWaitTimeout();
+        })
+    })
+}
+
+
 // Get device type
 
 var isIos = false;
@@ -113,7 +168,7 @@ function openAnotherPanorama(increment) {
             "showZoomCtrl": false,
             "showFullscreenCtrl": false,
             "autoLoad": true,
-            "autoRotate": 1,
+            "autoRotate": autoRotateSpeed,
             "friction": 0.05,
             "strings": panellumStrings,
         });
@@ -144,7 +199,7 @@ function openPopup(userData) {
         "showZoomCtrl": false,
         "showFullscreenCtrl": false,
         "autoLoad": true,
-        "autoRotate": 1,
+        "autoRotate": autoRotateSpeed,
         "friction": 0.05,
         "strings": panellumStrings,
     });

@@ -7,6 +7,10 @@
     font-family: Arial, Helvetica, sans-serif;
 }
 
+html, body {
+    overflow: hidden;
+}
+
 button:focus {outline:0;}
 
 @media (max-width: 600px) {
