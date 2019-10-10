@@ -8,13 +8,15 @@
     },
     "dependencies": {
         "pannellum": "^2.5.3",
-        "three": "^0.108.0"
+        "three": "^0.108.0",
+        "uglifyjs": "^2.4.11",
+        "url-polyfill": "^1.1.7"
     },
     "devDependencies": {
         "@babel/cli": "^7.6.0",
         "@babel/core": "^7.6.0",
         "@babel/preset-env": "^7.6.0",
         "babelify": "^10.0.0",
-        "uglify-js": "^3.6.0"
+        "uglify-js": "^3.6.1"
     }
 }
