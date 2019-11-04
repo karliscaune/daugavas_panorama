@@ -96,7 +96,7 @@ function startAutoplay() {
 
 // needs to be called after any interaction
 function resetWaitTimeout() {
-    console.log('clearing timeout');
+    // console.log('clearing timeout');
     clearTimeout(waitTimeout);
     waitTimeout = setTimeout(startAutoplay, idleTime);
     if(isAutoPlaying) { 
@@ -198,14 +198,12 @@ function handleInfoToggling() {
 }
 
 function closeInfoText() {
-    console.log('closing info text on mobile');
     mobileInfoIsOpen = false;
     mobileOpenDescription.classList.remove('close');
     infoContainer.classList.remove('show-description');
 }
 
 function mobileOpenInfoDescription() {
-    console.log('opening info description on mobile');
     mobileInfoIsOpen = true;
     mobileOpenDescription.classList.add('close');
     infoContainer.classList.add('show-description');
@@ -347,9 +345,9 @@ class PickHelper {
             const intersectedObjects = this.raycaster.intersectObjects(scene.children);
             if (intersectedObjects.length) {
                 this.pickedObject = intersectedObjects[0].object;
-                console.log(intersectedObjects);
+                // console.log(intersectedObjects);
                 if (this.pickedObject.userData.id) {
-                    console.log(this.pickedObject.userData.id);
+                    // console.log(this.pickedObject.userData.id);
                     openPopup(this.pickedObject.userData);
                 }
                 clearPickPosition();
@@ -519,7 +517,7 @@ function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize( window.innerWidth, window.innerHeight );
-    console.log(controls);
+    // console.log(controls);
 }
 
 function animate() {
