@@ -140,6 +140,7 @@ if (isIos || window.screen.width < 600 ) {
 // initialize stuff
 const canvas = document.getElementById('navCanvas');
 let panoramaViewer = null;
+let mobileInfoIsOpen = false;
 
 // Place names
 
@@ -161,24 +162,54 @@ const pOrder = objectValues(panoramaOrder.order);
 // Event listeners
 
 const closeButton = document.getElementById('closeButton');
+const mobileOpenDescription = document.getElementById('mobileToggleDescription');
 const popup = document.getElementById('panoramaPopup');
 const popupLogosElement = document.getElementById('panoramaLogos');
 const panoramaPrevButton = document.getElementById('panoramaPrev');
 const panoramaNextButton = document.getElementById('panoramaNext');
 let popupIsOpen = false;
+
+// Static elements
+
+const infoTitle = document.getElementById('infoTitle');
+const infoDescription = document.getElementById('infoDescription');
+const infoContainer = document.getElementById('infoContainer');
+
 // Holds the value of the currently opened panoramas index
 let currentUserData = 1; // This is at first updated by the user clicking on a marker.
 
 
 closeButton.addEventListener('click', closePopup);
+mobileOpenDescription.addEventListener('click', handleInfoToggling);
 panoramaPrevButton.addEventListener('click', openPrevPanorama);
 panoramaNextButton.addEventListener('click', openNextPanorama);
 
 closeButton.addEventListener('touchstart', closePopup);
+mobileOpenDescription.addEventListener('touchstart', handleInfoToggling);
 panoramaPrevButton.addEventListener('touchstart', openPrevPanorama);
 panoramaNextButton.addEventListener('touchstart', openNextPanorama);
 
+function handleInfoToggling() {
+    if(mobileInfoIsOpen) {
+        closeInfoText();
+    } else {
+        mobileOpenInfoDescription();
+    }
+}
 
+function closeInfoText() {
+    console.log('closing info text on mobile');
+    mobileInfoIsOpen = false;
+    mobileOpenDescription.classList.remove('close');
+    infoContainer.classList.remove('show-description');
+}
+
+function mobileOpenInfoDescription() {
+    console.log('opening info description on mobile');
+    mobileInfoIsOpen = true;
+    mobileOpenDescription.classList.add('close');
+    infoContainer.classList.add('show-description');
+}
 
 function openPrevPanorama() {
     openAnotherPanorama(-1);
@@ -192,7 +223,13 @@ function equals(n) {
     return n == currentUserData;
 }
 
+function updateInfo(userData) {
+    infoTitle.innerHTML = userData.title;
+    infoDescription.innerHTML = userData.description;
+}
+
 function openAnotherPanorama(increment) {
+    hideInfo();
     const nextIndex = pOrder.findIndex(equals) + increment;
     let indexToOpen = 0;
     if(nextIndex < 0) {
@@ -207,6 +244,7 @@ function openAnotherPanorama(increment) {
     
     // Update currentUserData with the new index
     currentUserData = indexToOpen;
+
     // Open the panorama
     if(panoramaViewer) {
         panoramaViewer.destroy();
@@ -228,10 +266,20 @@ function openAnotherPanorama(increment) {
             "friction": 0.05,
             "strings": panellumStrings,
         });
-    }    
+        // Update text inside popup and hide it
+        hideInfo();
+        panoramaViewer.on('load', function () {
+            updateInfo(userData);
+            requestAnimationFrame(function() {
+                closeInfoText();
+                showInfo();
+            });
+        });
+    }
 }
 
 function closePopup() {
+    hideInfo();
     popup.classList.remove('visible');
     popupLogosElement.classList.remove('visible');
     popupIsOpen = false;
@@ -240,8 +288,17 @@ function closePopup() {
     }
 }
 
+function showInfo() {
+    infoContainer.classList.remove("hidden");
+    infoContainer.classList.add("visible");
+}
+
+function hideInfo() {
+    infoContainer.classList.add("hidden");
+    infoContainer.classList.remove("visible");
+}
+
 function openPopup(userData) {
-    console.log(userData);
     popupIsOpen = true;
     currentUserData = userData.index;
     
@@ -261,6 +318,11 @@ function openPopup(userData) {
     });
 
     panoramaViewer.on('load', function () {
+        updateInfo(userData);
+        requestAnimationFrame(function() {
+            closeInfoText();
+            showInfo();
+        });
         popupLogosElement.classList.add('visible');
     }
 );
@@ -415,7 +477,8 @@ function init() {
         mesh.userData.vOffset = markers[i].vOffset;
         mesh.userData.maxpitch = markers[i].maxpitch;
         mesh.userData.minpitch = markers[i].minpitch;
-        mesh.userData.htmlContent = markers[i].htmlContent;
+        mesh.userData.title = markers[i].title;
+        mesh.userData.description = markers[i].description;
         mesh.userData.index = markers[i].index;
 
         mesh.updateMatrix();

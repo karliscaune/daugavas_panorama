@@ -4,6 +4,7 @@
     <title>Daugavas Panorāmas</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans|Roboto+Condensed:700&display=swap&subset=latin-ext" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="assets/styles.css" />
     <link rel="stylesheet" type="text/css" href="assets/pannellum.css" />
 </head>
@@ -23,7 +24,12 @@
        <path fill="#073c5c" d="M384,416c70.577,0,128-57.422,128-128s-57.423-128-128.001-128H96V96L0,192l96,96.001v-64h287.999
            c35.297,0,64,28.703,64,64S419.296,352,383.999,352h-379v64H384L384,416z"/>
        </svg></button>
-        <div id="userContent"></div>
+        <div class="user-content hidden" id="infoContainer">
+            <h2 id="infoTitle"></h2>
+            <p id="infoDescription"></p>
+            <button id="mobileToggleDescription" class="description open"></button>
+            <!-- <button id="closeInfo"></button> -->
+        </div>
         <div class="logos" id="panoramaLogos">
             <div class="logo-images"></div>
         </div>
