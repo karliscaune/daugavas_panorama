@@ -6,4 +6,10 @@ exports.namePlanes = [
     { x: 364, z: -356, imageUrl: 'assets/places/mangali' },
     { x: 322, z: 148, imageUrl: 'assets/places/sarkandaugava' },
     { x: -314, z: -1096, imageUrl: 'assets/places/mangalsala' },
+    { x: -439, z: -479, imageUrl: 'assets/places/bolderaja' },
+    { x: -711, z: -732, imageUrl: 'assets/places/daugavgriva' },
+    { x: -86, z: 770, imageUrl: 'assets/places/kipsala' },
+    { x: -383, z: -732, imageUrl: 'assets/places/milestibas_salina' },
+    { x: -166, z: 483, imageUrl: 'assets/places/spilve' },
+    { x: -114, z: -262, imageUrl: 'assets/places/voleri' },
 ]
