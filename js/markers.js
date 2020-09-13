@@ -26,8 +26,27 @@ exports.options = [
     { x:75, z:772, id: 'p25', imageUrl: '25', vaov: 180, vOffset: 0, maxpitch: 40, minpitch: -90, title: 'Andrejsala', description: 'Te atrodas “RĪGAS PASAŽIERU TERMINĀLS” SIA pasažieru terminālis.', index: 24 },
     { x:0, z:636, id: 'p26', imageUrl: '26', vaov: 180, vOffset: 0, maxpitch: 40, minpitch: -90, title: 'Andrejsala', description: '“RĪGAS OSTAS ELEVATORS” AS šeit pārkrauj beramkravas un ģenerālkravas.  Te atrodas arī muitas noliktavas.', index: 25 },
     { x:126, z:-687, id: 'p27', imageUrl: '27', vaov: 180, vOffset: 0, maxpitch: 40, minpitch: -90, title: 'Vecmīlgrāvis', description: 'Te atrodas Augusta Dombrovska kultūras komplekss: Ziemeļblāzmas pils, Proģimnāzija un Burtnieku nams.', index: 26 },
+    { x: -835, z: -1233, id: 'p28', imageUrl: '28', vaov: 180, vOffset: 0, maxpitch: 40, minpitch: -90, title: 'Daugavgrīvas mols', description: 'Daugavgrīvas mols būvēts no 1881. līdz 1885. gadam kā Komētforta dambja turpinājums, lai nodrošinātu kuģiem brīvu pieeju Rīgas ostā. Mola garums ir 860 metri.', index: 27 },
+    { x: -677, z: -1089, id: 'p29', imageUrl: '29', vaov: 180, vOffset: 0, maxpitch: 40, minpitch: -90, title: 'Daugavgrīvas bāka', description: 'Pirmo bāku šajā vietā uzbūvēja 1536. gadā, bet pašreizējā bāka uzcēla 1957. gadā. Tā ir cilindriskas formas dzelzsbetona tornis ar baltu zibšņa uguni, kura augstums ir 35 metri virs jūras līmeņa.', index: 28 },
+    { x: -685, z: -930, id: 'p30', imageUrl: '30', vaov: 180, vOffset: 0, maxpitch: 40, minpitch: -90, title: 'Daugavgrīva', description: '“BOLDERĀJAS KUĢU REMONTA RŪPNĪCA” SIA un “WT TERMINAL” SIA kurš pārkrauj beramkravas un ģenerālkravas.', index: 29 },
+    { x: -546, z: -968, id: 'p31', imageUrl: '31', vaov: 180, vOffset: 0, maxpitch: 40, minpitch: -90, title: 'Daugavgrīva', description: '„LA CON” SIA šeit pārkrauj beramkravas', index: 30 },
+    { x: -500, z: -711, id: 'p32', imageUrl: '32', vaov: 180, vOffset: 0, maxpitch: 40, minpitch: -90, title: 'Daugavgrīva – Bolderāja', description: 'Tilts pār Buļļupi, kurš savieno Daugavgrīvu ar Bolderāju. Mīlestības saliņa.', index: 31 },
+    { x: -354, z: -785, id: 'p33', imageUrl: '33', vaov: 180, vOffset: 0, maxpitch: 40, minpitch: -90, title: 'Mīlestības saliņa', description: 'Mīlestības saliņa sāka veidoties 19. gs. otrajā pusē līdz ar Daugavas gultni regulējošo dambju izbūvi. Šeit atrodas putnu vērošanas tornis no kura labi pārskatāma Daugavgrīva, Bolderāja un Mangaļsala.', index: 32 },
+    { x: -186, z: -650, id: 'p34', imageUrl: '34', vaov: 180, vOffset: 0, maxpitch: 40, minpitch: -90, title: 'Krievu sala', description: '„RIGA COAL TERMINAL” SIA pārkrauj beramkravas un „BUTO LS” SIA kuģu remonts.', index: 33 },
+    { x: -85, z: -514, id: 'p35', imageUrl: '35', vaov: 180, vOffset: 0, maxpitch: 40, minpitch: -90, title: 'Krievu sala', description: '„KS TERMINAL” SIA pārkrauj beramkravas un ģenerālkravas, šeit atrodas muitas noliktava un pasažieru terminālis.', index: 34 },
+    { x: -29, z: -374, id: 'p36', imageUrl: '36', vaov: 180, vOffset: 0, maxpitch: 40, minpitch: -90, title: 'Voleri', description: '„LATVIJAS PROPĀNA GĀZE” SIA šeit ir muitas noliktavas un pārkrauj lejamkravas', index: 35 },
+    { x: -23, z: -253, id: 'p37', imageUrl: '37', vaov: 180, vOffset: 0, maxpitch: 40, minpitch: -90, title: 'Voleri', description: '„OSTA LEJASVOLERI” SIA pārkrauj beramkravas un ģenerālkravas', index: 36 },
+    { x: -15, z: -113, id: 'p38', imageUrl: '38', vaov: 180, vOffset: 0, maxpitch: 40, minpitch: -90, title: 'Voleri', description: '„JP TERMINAL” SIA pārkrauj beramkravas un ģenerālkravas', index: 37 },
+    { x: -6, z: 27, id: 'p39', imageUrl: '39', vaov: 180, vOffset: 0, maxpitch: 40, minpitch: -90, title: 'Voleri', description: 'Dabas liegums Krēmeri radīts putnu ligzdošanas vietu aizsardzības nolūkos.', index: 38 },
+    { x: -20, z: 207, id: 'p40', imageUrl: '40', vaov: 180, vOffset: 0, maxpitch: 40, minpitch: -90, title: 'Spilve', description: '„KRS” SIA Šeit veic kuģu remontu', index: 39 },
+    { x: -178, z: -292, id: 'p41', imageUrl: '41', vaov: 180, vOffset: 0, maxpitch: 40, minpitch: -90, title: 'Bolderāja', description: 'Hapaka grāvis un Beķera grāvis', index: 40 },
+    { x: -114, z: -370, id: 'p42', imageUrl: '42', vaov: 180, vOffset: 0, maxpitch: 40, minpitch: -90, title: 'Krievu sala', description: 'Dzelzceļa pievads termināļiem.', index: 41 },
+    { x: -244, z: -534, id: 'p43', imageUrl: '43', vaov: 180, vOffset: 0, maxpitch: 40, minpitch: -90, title: 'Krievu sala, Bolderāja', description: '„KRONOSPAN RIGA” SIA', index: 42 },
+    { x: -36, z: 473, id: 'p44', imageUrl: '44', vaov: 180, vOffset: 0, maxpitch: 40, minpitch: -90, title: 'Spilve', description: '', index: 43 },
+    { x: -120, z: 622, id: 'p45', imageUrl: '45', vaov: 180, vOffset: 0, maxpitch: 40, minpitch: -90, title: 'Iļģuciems', description: '„EXTRON BALTIC” SIA un „PORT MAGNAT” SIA pārkrauj beramkravas, ģenerālkravas. Šeit atrodas muitas noliktava.', index: 44 },
+    { x: -51, z: 671, id: 'p46', imageUrl: '46', vaov: 180, vOffset: 0, maxpitch: 40, minpitch: -90, title: 'Ķīpsala', description: '', index: 45 },
+    { x: -16, z: 832, id: 'p47', imageUrl: '47', vaov: 180, vOffset: 0, maxpitch: 40, minpitch: -90, title: 'Ķīpsala', description: '„PILSĒTAS JAHTKLUBS”', index: 46 },
 ]
 
 // Excel formula for generation
 // = "{ x:" & B2 & ", z:" & C2 & ", id: 'p" & A2 & "', imageUrl: '" & A2 & "', vaov: 180, vOffset: 0, maxpitch: 40, minpitch: -90, htmlContent: '' },"
-
