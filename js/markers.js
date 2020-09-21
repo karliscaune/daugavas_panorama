@@ -39,7 +39,7 @@ exports.options = [
     { x: -15, z: -113, id: 'p38', imageUrl: '38', vaov: 180, vOffset: 0, maxpitch: 40, minpitch: -90, title: 'Voleri', description: '„JP TERMINAL” SIA pārkrauj beramkravas un ģenerālkravas', index: 37 },
     { x: -6, z: 27, id: 'p39', imageUrl: '39', vaov: 180, vOffset: 0, maxpitch: 40, minpitch: -90, title: 'Voleri', description: 'Dabas liegums Krēmeri radīts putnu ligzdošanas vietu aizsardzības nolūkos.', index: 38 },
     { x: -20, z: 207, id: 'p40', imageUrl: '40', vaov: 180, vOffset: 0, maxpitch: 40, minpitch: -90, title: 'Spilve', description: '„KRS” SIA Šeit veic kuģu remontu', index: 39 },
-    { x: -178, z: -292, id: 'p41', imageUrl: '41', vaov: 180, vOffset: 0, maxpitch: 40, minpitch: -90, title: 'Bolderāja', description: 'Hapaka grāvis un Beķera grāvis', index: 40 },
+    { x: -178, z: -292, id: 'p41', imageUrl: '41', vaov: 180, vOffset: 0, maxpitch: 40, minpitch: -90, title: 'Bolderāja', description: 'Hapaka grāvis ir Daugavas kreisā krasta pieteka, kas sākas Babītes mežos un plūst cauri Spilves pļavām. Kopumā grāvis ir 25 kilometrus garš. Izveidojies no vecupes, kas iezīmē seno Lielupes gultni pār Lieknei no Babītes ezera līdz Daugavai, lielākā pieteka Beķera grāvis.', index: 40 },
     { x: -114, z: -370, id: 'p42', imageUrl: '42', vaov: 180, vOffset: 0, maxpitch: 40, minpitch: -90, title: 'Krievu sala', description: 'Dzelzceļa pievads termināļiem.', index: 41 },
     { x: -244, z: -534, id: 'p43', imageUrl: '43', vaov: 180, vOffset: 0, maxpitch: 40, minpitch: -90, title: 'Krievu sala, Bolderāja', description: '„KRONOSPAN RIGA” SIA', index: 42 },
     { x: -36, z: 473, id: 'p44', imageUrl: '44', vaov: 180, vOffset: 0, maxpitch: 40, minpitch: -90, title: 'Spilve', description: '', index: 43 },
