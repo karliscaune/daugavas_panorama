@@ -344,10 +344,14 @@ class PickHelper {
             this.raycaster.setFromCamera(normalizedPosition, camera);
             const intersectedObjects = this.raycaster.intersectObjects(scene.children);
             if (intersectedObjects.length) {
+                console.log(intersectedObjects);
                 this.pickedObject = intersectedObjects[0].object;
-                // console.log(intersectedObjects);
+                if (intersectedObjects.length > 1 
+                    && intersectedObjects[1].object.name == 'base-object'
+                    && intersectedObjects[0].object.name != 'base-object') {
+                    this.pickedObject = intersectedObjects[1].object;
+                }
                 if (this.pickedObject.userData.id) {
-                    // console.log(this.pickedObject.userData.id);
                     openPopup(this.pickedObject.userData);
                 }
                 clearPickPosition();
