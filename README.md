@@ -40,3 +40,7 @@ The application supports automatically cycling through panoramas after a specifi
 Example: set autoplay to kick in after 1 minute and set panorama autorotation speed to 3.
 
 `http://0.0.0.0:8000/?autoplay=1&wait=60&speed=3`
+
+## Licensing
+
+All photographic panorama images are the work of Uģis Bērziņš and may not be distributed, altered or used commercially without the authors permission.
