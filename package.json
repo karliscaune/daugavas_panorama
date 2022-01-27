@@ -8,7 +8,7 @@
     },
     "dependencies": {
         "pannellum": "^2.5.5",
-        "three": "^0.108.0",
+        "three": "^0.137.0",
         "uglifyjs": "^2.4.11",
         "url-polyfill": "^1.1.7"
     },
